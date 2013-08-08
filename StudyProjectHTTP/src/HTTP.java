@@ -1,25 +1,27 @@
 import java.awt.image.BufferedImage;
-import java.io.BufferedReader;
-import java.io.DataInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.net.URL;
-import java.net.URLConnection;
+import java.io.*;
+import java.net.*;
+import java.util.*;
 
+import javax.activation.DataHandler;
+import javax.activation.FileDataSource;
 import javax.imageio.ImageIO;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+
+import org.jsoup.Jsoup;
+import org.jsoup.select.Elements;
+import org.w3c.dom.*;
 
 public class HTTP {
 
 	
+	private static final String String = null;
 	public static void main(String[] args) throws Exception {
 		HTTP m = new HTTP();
 	}
 
-	public HTTP() throws Exception {
+	public HTTP() {
 	}
 
 	public String sendRequest(String _url) throws Exception {
@@ -125,5 +127,76 @@ public class HTTP {
 		ImageIO.write(_img, ext, outputfile);
 	}
 	
+	public void xmlParser_test(){
+		try {
+			File stocks = new File("C:/files/stocks.xml");
+			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+			Document doc = dBuilder.parse(stocks);
+			doc.getDocumentElement().normalize();
+
+			System.out.println("root of xml file " + doc.getDocumentElement().getNodeName());
+			NodeList nodes = doc.getElementsByTagName("recipe");
+			System.out.println("==========================");
+
+			for (int i = 0; i < nodes.getLength(); i++) {
+				Node node = nodes.item(i);
+				if (node.getNodeType() == Node.ELEMENT_NODE) {
+					Element element = (Element) node;
+					System.out.println("Рецепт: " + getValue("title", element, 0));
+					System.out.println("Ингридиенты: " + getValue("ingredient", element, 0));
+					System.out.println("Ингридиенты: " + getValue("ingredient", element, 1));
+					System.out.println("Способ приготовления: " + getValue("step", element, 0));
+				}
+			}
+		} catch (Exception ex) {
+				ex.printStackTrace();				
+		}
+	}
+	
+	public void xmlParser(String _path){
+		try {
+			File stocks = new File(_path );
+			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+			Document doc = dBuilder.parse(stocks);
+			doc.getDocumentElement().normalize();
+
+			System.out.println("root of xml file " + doc.getDocumentElement().getNodeName());
+			NodeList nodes = doc.getElementsByTagName("!DOCTYPE");
+			System.out.println("==========================");
+
+			for (int i = 0; i < nodes.getLength(); i++) {
+				Node node = nodes.item(i);
+				if (node.getNodeType() == Node.ELEMENT_NODE) {
+					Element element = (Element) node;
+					System.out.println("Рецепт: " + getValue("title", element, 0));
+					System.out.println("Ингридиенты: " + getValue("ingredient", element, 0));
+					System.out.println("Ингридиенты: " + getValue("ingredient", element, 1));
+					System.out.println("Способ приготовления: " + getValue("step", element, 0));
+				}
+			}
+		} catch (Exception ex) {
+				ex.printStackTrace();				
+		}
+	}
+	private String getValue(String tag, Element element, int id) {
+		NodeList nodes = element.getElementsByTagName(tag).item(id).getChildNodes();
+		Node node = (Node) nodes.item(0);
+		return node.getNodeValue();
+	}
+	
+	public String[] htmlParser() throws IOException{
+		org.jsoup.nodes.Document doc = Jsoup.connect("http://en.wikipedia.org/").get();
+		Elements newsHeadlines = doc.select("a");
+		
+		//print( newsHeadlines.toString() );
+		return (java.lang.String[]) newsHeadlines.toArray();
+	}
+	
+	
+	public void print(Object _obj){
+		System.out.println(_obj);
+	}
 	
 }
