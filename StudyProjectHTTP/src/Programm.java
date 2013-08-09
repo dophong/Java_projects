@@ -13,20 +13,54 @@ public class Programm {
 		request = new HTTP();
 		
 		//saveImage();
-		htmlParse();
+		//htmlParse();
+		htmlValidate();
+		
 	}
 	
 	private void htmlParse() {
 		try {
+			String[] _htmlContent;
+			_htmlContent = request.htmlParser("http://msn.com", "a");
+			for (int i = 0; i < _htmlContent.length; i++){
+				//print(_htmlContent[i]);
+			}
 			
-			System.out.println("¬ведите поисковый запрос: ");
-			String text = request.enterText();
-			_fileContent = request.sendRequest(url);
-			request.htmlParser();
+			_htmlContent = request.htmlParser("http://msn.com", "a", "");
+			for (int i = 0; i < _htmlContent.length; i++){
+				print(_htmlContent[i]);
+			}
 			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	private void htmlValidate() {
+		try {
+			String[] _htmlContent;
+			_htmlContent = request.htmlParser("http://ya.ru", "a");
+			for (int i = 0; i < _htmlContent.length; i++){
+				print(_htmlContent[i]);
+			}
+			
+			_htmlContent = request.htmlParser("http://ya.ru", "a", "href");
+			String _str = "";
+			for (int i = 0; i < _htmlContent.length; i++){
+				try{
+					_str = _str + "\n" + _htmlContent[i] + " - "+ request.getServerCode(_htmlContent[i]);
+					//request.writeFile( a +" --"+ request.getServerCode(_htmlContent[i]),"C:/files/result.txt" );
+					
+				}catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+			request.writeFile( _str,"C:/files/result.txt" );
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
 	}
 
 	public void saveImage(){
@@ -59,5 +93,11 @@ public class Programm {
 				e.printStackTrace();
 			}
 	}
+	
+	public void print(Object _obj){
+		System.out.println(_obj);
+	}
+	
+	
 	
 }

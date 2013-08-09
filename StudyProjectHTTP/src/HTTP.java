@@ -77,7 +77,7 @@ public class HTTP {
 			// Close the input stream
 			in.close();
 		} catch (Exception e) {// Catch exception if any
-			System.err.println("Error: " + e.getMessage());
+			print("Error: " + e.getMessage());
 		}
 		
 		return _result;
@@ -186,17 +186,47 @@ public class HTTP {
 		return node.getNodeValue();
 	}
 	
-	public String[] htmlParser() throws IOException{
-		org.jsoup.nodes.Document doc = Jsoup.connect("http://en.wikipedia.org/").get();
-		Elements newsHeadlines = doc.select("a");
+	public String[] htmlParser(String _url, String _tag) throws IOException{
+		org.jsoup.nodes.Document doc = Jsoup.connect(_url).get();
+		Elements newsHeadlines = doc.select(_tag);
 		
-		//print( newsHeadlines.toString() );
-		return (java.lang.String[]) newsHeadlines.toArray();
+		Object[] objArr = newsHeadlines.toArray();
+		String[] objStr = new String[objArr.length];
+		for (int i = 0; i < objArr.length; i++){
+			objStr[i] = objArr[i].toString();
+		}
+		return objStr;
+	}
+	
+	public String[] htmlParser(String _url, String _tag, String _attr) throws IOException{
+		org.jsoup.nodes.Document doc = Jsoup.connect(_url).get();
+		Elements newsHeadlines = doc.select(_tag);
+		
+		Object[] objArr = newsHeadlines.toArray();
+		String[] objStr = new String[objArr.length];
+		for (int i = 0; i < objArr.length; i++){
+			String _tmp = objArr[i].toString();
+			if(_tmp.indexOf(_attr) != -1){
+				objStr[i] = _tmp.replaceAll(".*"+_attr+"=\"", "").replaceAll("\".*", "");
+			}else{
+				objStr[i] = "";
+			}
+			
+		}
+		
+		return objStr;
 	}
 	
 	
 	public void print(Object _obj){
 		System.out.println(_obj);
 	}
+	
+	public int getServerCode(String _url) throws IOException{
+		URL url = new URL(_url);
+		HttpURLConnection openConnection = (HttpURLConnection) url.openConnection();
+		openConnection.connect();
+		return openConnection.getResponseCode();
+		}
 	
 }
