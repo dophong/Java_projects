@@ -1,24 +1,15 @@
 package web_bot_core.tools.io;
 
 import java.awt.image.BufferedImage;
-import java.io.BufferedReader;
-import java.io.DataInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 
 import javax.imageio.ImageIO;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.*;
 
-import org.jsoup.Jsoup;
+import org.jsoup.*;
 import org.jsoup.select.Elements;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
+import org.w3c.dom.*;
+
 
 public class FileProcessing {
 
@@ -79,7 +70,7 @@ public class FileProcessing {
 		ImageIO.write(_img, ext, outputfile);
 	}
 	
-	public void xmlParser(String _path){
+	/*public void xmlParser(String _path){
 		try {
 			File stocks = new File(_path );
 			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
@@ -104,7 +95,7 @@ public class FileProcessing {
 		} catch (Exception ex) {
 				ex.printStackTrace();				
 		}
-	}
+	}*/
 	private String getValue(String tag, Element element, int id) {
 		NodeList nodes = element.getElementsByTagName(tag).item(id).getChildNodes();
 		Node node = (Node) nodes.item(0);
